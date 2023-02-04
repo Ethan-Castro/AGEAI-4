@@ -10,22 +10,12 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 @app.route("/", methods=("GET", "POST"))
 def index():
     if request.method == "POST":
-        animal = request.form["animal"]
         response = openai.Completion.create(
-            model="text-davinci-003",
-            prompt=generate_prompt(animal),
-            temperature=0.6,
-        )
-        return redirect(url_for("index", result=response.choices[0].text))
-
-    result = request.args.get("result")
-    return render_template("index.html", result=result)
-
-
-def generate_prompt(animal):
-    return """Act like you work for the NYC department of aging and you are helping older people who don't understand technology understand what services are afforded to them. Respond to their prompt by giving them resources and numbers of those resources.
-    
-    
-    """.format(
-        animal.capitalize()
-    )
+  model="text-davinci-003",
+  prompt="Act like you are someone helping elderly people navigate what services are available to them. Explicitly say where to call and what to say\n",
+  temperature=0.7,
+  max_tokens=256,
+  top_p=1,
+  frequency_penalty=0,
+  presence_penalty=0
+)
